@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1c1c1c, #333333); /* Dark gradient background */
+            color: #fff;
+        }
+
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 400px;
+            background: #222; /* Dark background for calculator */
+            border-radius: 10px ;
+            padding: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7); /* Smooth shadow */
+        }
+
+        .display-container {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .calculation-display {
+            width: 80%;
+            height: 80px;
+            font-size: 40px;
+            text-align: right;
+            padding: 15px;
+            border: none;
+            border-radius: 10px 0px 0px 10px;
+            background: #1f1f1f; /* Dark gray background */
+            color:  #45c44f; /* Soft orange color for text */
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .result-display {
+            width: 78%;
+            height: 60px;
+            font-size: 28px;
+            text-align: right;
+            padding: 15px;
+            border: none;
+            border-radius: 10px 0px 0px 10px;
+            background: #1f1f1f;
+            color: #45c44f;
+            box-sizing: border-box;
+            outline: none;
+            /* margin-top: 10px; */
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .buttons button {
+            height: 75px;
+            width: 75px;
+            font-size: 1.5em;
+            padding: 15px;
+            border: none;
+            background: #333; /* Dark button color */
+            color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .buttons button:hover {
+            background: #444; /* Lighten button on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+            color: #d98415;
+        }
+
+        .buttons .special {
+            background: #f5a623; /* Orange for special buttons */
+            color: #333;
+        }
+
+        .buttons .special:hover {
+            background: #d98415; /* Darker orange on hover */
+        }
+
+        .buttons .equal {
+            background: #00b894; /* Green for equal button */
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .buttons .equal:hover {
+            background: #02a977; /* Darker green on hover */
+        }
+
+        .bottom-row {
+            display: flex;
+            padding: 10px;
+            width: 100%;
+            justify-self: center;
+            text-align: center;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            background: #e74c3c; /* Red for back button */
+            color: #fff;
+            border-radius: 0px 10px 10px 0px ;
+            cursor: pointer;
+            width: 20%;
+            height: 80px;
+            border: none;
+        }
+
+        .back-button:hover {
+            background: #c0392b; /* Darker red on hover */
+        }
+        .special{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            background: #e74c3c; /* Red for back button */
+            color: #fff;
+            border-radius: 0px 10px 10px 0px ;
+            cursor: pointer;
+            width: 17%;
+            height: 60px;
+            border: none;
+        }
+        #all{
+            display: flex;
+            margin: 5px;
+            justify-content: center;
+
+        }
+        #al{
+            display: flex;
+            margin: 10px;
+            justify-content: center;
+        }
+
+        @media (max-width: 500px) {
+            .buttons button {
+                font-size: 1.2em;
+                padding: 10px;
+            }
+
+            .calculation-display,
+            .result-display {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <div class="display-container">
+            <div id="all">
+                
+                <input type="text" id="calculationDisplay" class="calculation-display" placeholder="">
+                <button class="back-button" onclick="removeLast()">⌫</button>
+            </div>
+            <div id="al">
+               
+                <input type="text" id="resultDisplay" class="result-display" disabled placeholder="">
+                <button class="special" onclick="clearDisplay()">C</button>
+            </div>
+        </div>
+        <div class="buttons">
+            <button onclick="appendValue('(')">&#40;</button>
+            <button onclick="appendValue(')')">&#41;</button>
+            <button onclick="appendValue('%')">%</button>
+            <button class="equal" onclick="finalizeResult()">=</button>
+
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button onclick="appendValue('/')">÷</button>
+
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button onclick="appendValue('*')">×</button>
+
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button onclick="appendValue('-')">−</button>
+
+            <button onclick="appendValue('0')">0</button>
+            <button onclick="appendValue('.')">.</button>
+            <button onclick="calculateSquareRoot()">√</button>
+            <button onclick="appendValue('+')">+</button>
+        </div>
+    </div>
+
+    <script>
+        const calculationDisplay = document.getElementById('calculationDisplay');
+        const resultDisplay = document.getElementById('resultDisplay');
+
+        function appendValue(value) {
+            calculationDisplay.value += value;
+            showLiveResult();
+        }
+
+        function showLiveResult() {
+            try {
+                let expression = calculationDisplay.value.replace(/%/g, '/100');
+                let result = eval(expression);
+                resultDisplay.value = result || '';
+            } catch (error) {
+                resultDisplay.value = '';
+            }
+        }
+
+        function clearDisplay() {
+            calculationDisplay.value = '';
+            resultDisplay.value = '';
+        }
+
+        function removeLast() {
+            calculationDisplay.value = calculationDisplay.value.slice(0, -1);
+            showLiveResult();
+        }
+
+        function calculateSquareRoot() {
+            try {
+                let value = parseFloat(calculationDisplay.value);
+                if (!isNaN(value)) {
+                    calculationDisplay.value = Math.sqrt(value).toString();
+                    showLiveResult();
+                }
+            } catch (error) {
+                resultDisplay.value = 'Error';
+            }
+        }
+
+        function finalizeResult() {
+            try {
+                let result = eval(calculationDisplay.value.replace(/%/g, '/100'));
+                calculationDisplay.value = result.toString();
+                resultDisplay.value = '';
+            } catch (error) {
+                resultDisplay.value = 'Error';
+            }
+        }
+
+        calculationDisplay.addEventListener('input', showLiveResult);
+    </script>
+</body>
+
+</html>
