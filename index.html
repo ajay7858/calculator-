@@ -24,8 +24,8 @@
             align-items: center;
             width: 90%;
             max-width: 400px;
-            background: #222; /* Dark background for calculator */
-            border-radius: 10px ;
+            background: #00000000; /* Dark background for calculator */
+            border-radius: 10px;
             padding: 20px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7); /* Smooth shadow */
         }
@@ -38,34 +38,34 @@
         .calculation-display {
             width: 80%;
             height: 80px;
-            font-size: 55px;
+            font-size: 40px;
             font-weight: 600;
             text-align: right;
             padding: 15px;
             margin-bottom: 20px;
             border: none;
-            border-radius: 10px 0px 0px 10px;
+            border-radius: 10px;
             background: #000000; /* Dark gray background */
-            color:  #45c44f; /* Soft orange color for text */
+            color: #45c44f; /* Soft orange color for text */
             box-sizing: border-box;
             outline: none;
         }
 
         .result-display {
             width: 78%;
-            height: 60px;
-            font-size: 40px;
+            height: 25px;
+            font-size: 30px;
             font-weight: 400;
             text-align: right;
             padding: 15px;
             border: none;
-            border-radius: 10px 0px 0px 10px;
+            border-radius: 10px;
             background: #000000;
             color: #6fc676;
             box-sizing: border-box;
             outline: none;
-            /* margin-top: 10px; */
             margin-bottom: 10px;
+            margin-top: 15px;
         }
 
         .buttons {
@@ -131,7 +131,7 @@
             font-weight: bold;
             background: #e74c3c; /* Red for back button */
             color: #fff;
-            border-radius: 0px 10px 10px 0px ;
+            border-radius: 10px;
             cursor: pointer;
             width: 20%;
             height: 80px;
@@ -141,27 +141,29 @@
         .back-button:hover {
             background: #c0392b; /* Darker red on hover */
         }
-        .special{
+
+        .special {
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 30px;
             font-weight: bold;
-            background: #e74c3c; /* Red for back button */
+            background: #e74c3c; /* Red for AC button */
             color: #fff;
-            border-radius: 0px 10px 10px 0px ;
+            border-radius: 10px;
             cursor: pointer;
             width: 17%;
             height: 60px;
             border: none;
         }
-        #all{
+
+        #all {
             display: flex;
             margin: 5px;
             justify-content: center;
-
         }
-        #al{
+
+        #al {
             display: flex;
             margin: 10px;
             justify-content: center;
@@ -172,11 +174,6 @@
                 font-size: 50px;
                 padding: 0px;
             }
-
-            .calculation-display,
-            .result-display {
-                font-size:55px;
-            }
         }
     </style>
 </head>
@@ -185,12 +182,10 @@
     <div class="calculator">
         <div class="display-container">
             <div id="all">
-                
                 <input type="text" id="calculationDisplay" class="calculation-display" placeholder="">
                 <button class="back-button" onclick="removeLast()">⌫</button>
             </div>
             <div id="al">
-               
                 <input type="text" id="resultDisplay" class="result-display" disabled placeholder="">
                 <button class="special" onclick="clearDisplay()">AC</button>
             </div>
@@ -235,9 +230,9 @@
         function showLiveResult() {
             try {
                 let expression = calculationDisplay.value.replace(/%/g, '/100');
-                let result = eval(expression);
-                resultDisplay.value = result || '';
-            } catch (error) {
+                let result = safeEval(expression);
+                resultDisplay.value = !isNaN(result) ? result : '';
+            } catch {
                 resultDisplay.value = '';
             }
         }
@@ -255,23 +250,26 @@
         function calculateSquareRoot() {
             try {
                 let value = parseFloat(calculationDisplay.value);
-                if (!isNaN(value)) {
-                    calculationDisplay.value = Math.sqrt(value).toString();
-                    showLiveResult();
-                }
-            } catch (error) {
+                calculationDisplay.value = !isNaN(value) ? Math.sqrt(value).toString() : '';
+                showLiveResult();
+            } catch {
                 resultDisplay.value = 'Error';
             }
         }
 
         function finalizeResult() {
             try {
-                let result = eval(calculationDisplay.value.replace(/%/g, '/100'));
-                calculationDisplay.value = result.toString();
+                let expression = calculationDisplay.value.replace(/%/g, '/100');
+                calculationDisplay.value = safeEval(expression).toString();
                 resultDisplay.value = '';
-            } catch (error) {
+            } catch {
                 resultDisplay.value = 'Error';
             }
+        }
+
+        function safeEval(expression) {
+            if (!/^[0-9+\-*/().% ]+$/.test(expression)) throw new Error('Invalid Expression');
+            return Function('"use strict"; return (' + expression + ')')();
         }
 
         calculationDisplay.addEventListener('input', showLiveResult);
